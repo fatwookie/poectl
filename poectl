@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+TARGET=(switch1:49 switch2:6)
+OID="1.3.6.1.2.1.105.1.1.1.3.1."
+COMMUNITY="blabla_rw"
+# Mode 2 of never use PoE, mode 1 is auto.
+MODE=$1
+
+if [[ $# -eq 0 ]]; then exit 1; fi
+
+for ((interface = 0; interface < ${#TARGET[*]}; interface++))
+do
+ echo "Setting OID: ${TARGET[$interface]}"
+ HOST=`echo ${TARGET[$interface]} | cut -d":" -f1`
+ PORT=`echo ${TARGET[$interface]} | cut -d":" -f2`
+ /usr/bin/snmpset -v2c -c ${COMMUNITY} ${HOST} ${OID$PORT} i ${MODE}
+done
+exit 0
